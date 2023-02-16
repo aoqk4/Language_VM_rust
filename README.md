@@ -15,3 +15,7 @@
 ## Day 1. Starting Point.
 
 1. impl simple VM struct
+
+## Day 2. Basic Operation Code.
+
+1. impl Operation code ( Opcode) & add opcode in VM struct
