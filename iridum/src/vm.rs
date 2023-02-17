@@ -4,6 +4,13 @@ pub struct VM {
     registers: [i32; 32],
     pc: usize,
     program: Vec<u8>,
+    remainder: u32,
+}
+
+impl Default for VM {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl VM {
@@ -16,21 +23,45 @@ impl VM {
     }
 
     pub fn run(&mut self) {
-        loop {
-            if self.pc >= self.program.len() {
-                break;
+        // loop {
+        //     if self.pc >= self.program.len() {
+        //         break;
+        //     }
+        //     match self.decode_opcode() {
+        //         Opcode::HLT => {
+        //             println!("HLT encountered");
+        //             return;
+        //         }
+        //         _ => {
+        //             println!("Unrecognized opcode found! Terminating!");
+        //             return;
+        //         }
+        //     }
+        // }
+
+        let mut is_done = false;
+
+        while !!is_done {
+            is_done = self.excute_instruction();
+        }
+    }
+
+    fn excute_instruction(&mut self) -> bool {
+        if self.pc >= self.program.len() {
+            return false;
+        }
+        match self.decode_opcode() {
+            Opcode::LOAD => {
+                let register = self.next_8_bits() as usize;
+                let number = self.next_16_bits() as u32;
+                self.registers[register] = number as i32;
             }
-            match self.decode_opcode() {
-                Opcode::HLT => {
-                    println!("HLT encountered");
-                    return;
-                }
-                _ => {
-                    println!("Unrecognized opcode found! Terminating!");
-                    return;
-                }
+            Opcode::HLT => {
+                println!("HLT encountered");
+                false
             }
         }
+        true
     }
 
     pub fn decode_opcode(&mut self) -> Opcode {
@@ -38,6 +69,20 @@ impl VM {
         self.pc += 1;
 
         opcode
+    }
+
+    fn next_8_bits(&mut self) -> u8 {
+        let result = self.program[self.pc];
+        self.pc += 1;
+
+        result
+    }
+
+    fn next_16_bits(&mut self) -> u16 {
+        let result = ((self.program[self.pc] as u16) << 16) | self.program[self.pc + 1] as u16;
+        self.pc += 1;
+
+        result
     }
 }
 
@@ -69,5 +114,16 @@ mod tests {
         test_vm.run();
 
         assert_eq!(test_vm.pc, 1);
+    }
+
+    #[test]
+    fn test_load_opcode() {
+        let mut test_vm = get_test_vm();
+
+        test_vm.program = vec![0, 0, 1, 244];
+
+        test_vm.run();
+
+        assert_eq!(test_vm.registers[0], 500);
     }
 }

@@ -2,6 +2,8 @@
 pub enum Opcode {
     HLT,
     IGL,
+    LOAD,
+    ADD,
 }
 
 impl From<u8> for Opcode {
@@ -13,6 +15,17 @@ impl From<u8> for Opcode {
     }
 }
 
+impl Opcode {
+    // Opcode::LOAD => {
+    //     let register = Self.next_8_bits() as usize,
+
+    //     let number = Self.next_16_bits() as u16;
+    //     self.registers[register] = number as i32;
+
+    //     continue;
+    // }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct Instruction {
     opcode: Opcode,
@@ -20,7 +33,7 @@ pub struct Instruction {
 
 impl Instruction {
     pub fn new(opcode: Opcode) -> Self {
-        Instruction { opcode: opcode }
+        Instruction { opcode }
     }
 }
 

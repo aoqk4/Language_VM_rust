@@ -19,3 +19,7 @@
 ## Day 2. Basic Operation Code.
 
 1. impl Operation code ( Opcode) & add opcode in VM struct
+
+## Day 3. More Opcode
+
+1. impl ADD, DIV, SUB, MUL and LOAD
