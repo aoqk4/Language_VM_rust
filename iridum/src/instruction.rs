@@ -1,29 +1,26 @@
 #[derive(Debug, PartialEq)]
 pub enum Opcode {
-    HLT,
-    IGL,
     LOAD,
     ADD,
+    SUB,
+    MUL,
+    DIV,
+    HLT,
+    JMP,
+    JMPF,
+    IGL,
 }
 
 impl From<u8> for Opcode {
     fn from(value: u8) -> Self {
         match value {
-            0 => return Opcode::HLT,
-            _ => return Opcode::IGL,
+            0 => Opcode::LOAD,
+            5 => Opcode::HLT,
+            7 => Opcode::JMP,
+            8 => Opcode::JMPF,
+            _ => Opcode::IGL,
         }
     }
-}
-
-impl Opcode {
-    // Opcode::LOAD => {
-    //     let register = Self.next_8_bits() as usize,
-
-    //     let number = Self.next_16_bits() as u16;
-    //     self.registers[register] = number as i32;
-
-    //     continue;
-    // }
 }
 
 #[derive(Debug, PartialEq)]

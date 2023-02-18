@@ -23,3 +23,9 @@
 ## Day 3. More Opcode
 
 1. impl ADD, DIV, SUB, MUL and LOAD
+
+## Day 4. impl JUMP
+
+1. impl JUMP & JUMP FRONT
+
+2. test LOAD & JUMP and fixed program code
