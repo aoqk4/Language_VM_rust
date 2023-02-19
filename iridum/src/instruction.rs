@@ -8,16 +8,36 @@ pub enum Opcode {
     HLT,
     JMP,
     JMPF,
+    JMPB,
     IGL,
+    EQ,
+    NEQ,
+    GT,
+    LT,
+    GTQ,
+    LTQ,
+    JEQ,
 }
 
 impl From<u8> for Opcode {
     fn from(value: u8) -> Self {
         match value {
             0 => Opcode::LOAD,
+            1 => Opcode::ADD,
+            2 => Opcode::SUB,
+            3 => Opcode::MUL,
+            4 => Opcode::DIV,
             5 => Opcode::HLT,
-            7 => Opcode::JMP,
-            8 => Opcode::JMPF,
+            6 => Opcode::JMP,
+            7 => Opcode::JMPF,
+            8 => Opcode::JMPB,
+            9 => Opcode::EQ,
+            10 => Opcode::NEQ,
+            11 => Opcode::GTQ,
+            12 => Opcode::LTQ,
+            13 => Opcode::LT,
+            14 => Opcode::GT,
+            15 => Opcode::JEQ,
             _ => Opcode::IGL,
         }
     }

@@ -29,3 +29,9 @@
 1. impl JUMP & JUMP FRONT
 
 2. test LOAD & JUMP and fixed program code
+
+## Day 5. impl compare Opcode
+
+1. impl EQ, NEQ, GT, LT, GTQ, LTQ, JEQ
+
+2. test code.
