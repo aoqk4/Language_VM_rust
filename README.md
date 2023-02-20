@@ -35,3 +35,9 @@
 1. impl EQ, NEQ, GT, LT, GTQ, LTQ, JEQ
 
 2. test code.
+
+## Day 6. REPL
+
+1. structed REPL (in vm)
+
+2. excute vm.program with hex in REPL
