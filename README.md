@@ -41,3 +41,11 @@
 1. structed REPL (in vm)
 
 2. excute vm.program with hex in REPL
+
+## Day 7. nom??
+
+1. cargo add nom
+
+2. How can i use macro ?? & completeStr ???
+
+## Next Goal. use nom & macro
