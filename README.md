@@ -49,3 +49,9 @@
 2. How can i use macro ?? & completeStr ???
 
 ## Next Goal. use nom & macro
+
+## Day 8. Downgrade nom ver (macro fixed too..) & impl parsers
+
+0. Downgrade nom ver..
+
+1. Impl parsers
