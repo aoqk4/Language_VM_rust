@@ -194,7 +194,7 @@ impl VM {
             }
             Opcode::HLT => {
                 println!("HLT encountered");
-                false;
+                // false;
             }
         }
         true

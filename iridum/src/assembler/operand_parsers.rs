@@ -20,6 +20,7 @@ named!(
 mod tests {
     use super::*;
 
+    #[test]
     fn test_parse_operand() {
         let result = integer_operand(CompleteStr("#255"));
         assert_eq!(result.is_ok(), true);

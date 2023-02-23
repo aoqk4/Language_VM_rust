@@ -7,12 +7,11 @@ use super::Token;
 
 #[derive(Debug, PartialEq)]
 pub struct AssemblerInstruction {
-    opcode: Option<Token>,
+    opcode: Token,
     operand1: Option<Token>,
     operand2: Option<Token>,
     operand3: Option<Token>,
 }
-
 impl AssemblerInstruction {
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut results = vec![];
@@ -36,9 +35,8 @@ impl AssemblerInstruction {
             }
         }
 
-        return results;
+        results
     }
-
     fn extract_operand(t: &Token, results: &mut Vec<u8>) {
         match t {
             Token::Register { reg_num } => results.push(*reg_num),
@@ -65,7 +63,7 @@ named!(pub instruction_one<CompleteStr, AssemblerInstruction>,
         i: integer_operand >>
         (
             AssemblerInstruction{
-                opcode: Some(o),
+                opcode: o,
                 operand1: Some(r),
                 operand2: Some(i),
                 operand3: None
@@ -88,7 +86,7 @@ mod tests {
                 CompleteStr(""),
                 AssemblerInstruction {
                     // label: None,
-                    opcode: Some(Token::Op { code: Opcode::LOAD }),
+                    opcode: Token::Op { code: Opcode::LOAD },
                     operand1: Some(Token::Register { reg_num: 0 }),
                     operand2: Some(Token::IntegerOperand { value: 100 }),
                     operand3: None

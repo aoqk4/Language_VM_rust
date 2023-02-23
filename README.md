@@ -55,3 +55,11 @@
 0. Downgrade nom ver..
 
 1. Impl parsers
+
+## Day 9. Fix instruction_Parser Err (Add Copy, Clone for Opcode)
+
+1. fix Parser & test
+
+2. fix REPL hex to Parser lang.
+
+TODO. Case-sensitive assembler fix...
