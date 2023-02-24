@@ -63,3 +63,11 @@
 2. fix REPL hex to Parser lang.
 
 TODO. Case-sensitive assembler fix...
+
+## Day 10. Clippy & improving assembler & add parser form.
+
+1. cargo clippy & make more clean code.
+
+2. add nop in Opcode & impl and use from(CompleteStr) for Opcode.
+
+3. add instruction_parser form. (for LOAD, ADD, HLT)
