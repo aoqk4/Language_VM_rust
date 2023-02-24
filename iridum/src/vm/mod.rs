@@ -189,6 +189,11 @@ impl VM {
                 let value = self.registers[self.next_8_bits() as usize];
                 self.pc -= value as usize;
             }
+            Opcode::NOP => {
+                self.next_8_bits();
+                self.next_8_bits();
+                self.next_8_bits();
+            }
             Opcode::IGL => {
                 println!("Unrecognized opcode found! Terminating!");
             }

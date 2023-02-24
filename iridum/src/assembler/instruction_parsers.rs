@@ -55,7 +55,7 @@ impl AssemblerInstruction {
 
 named!(pub instruction_one<CompleteStr, AssemblerInstruction>,
     do_parse!(
-        o: opcode_load >>
+        o: opcode >>
         r: register >>
         i: integer_operand >>
         (

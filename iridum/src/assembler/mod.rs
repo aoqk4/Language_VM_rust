@@ -7,7 +7,7 @@ pub mod register_parsers;
 pub mod instruction_parsers;
 pub mod program_parser;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     Op { code: Opcode },
     Register { reg_num: u8 },

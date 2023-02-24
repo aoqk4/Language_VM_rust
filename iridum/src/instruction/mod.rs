@@ -19,6 +19,7 @@ pub enum Opcode {
     GTQ,
     LTQ,
     JEQ,
+    NOP,
 }
 impl From<Opcode> for u8 {
     fn from(op: Opcode) -> Self {
@@ -39,6 +40,7 @@ impl From<Opcode> for u8 {
             Opcode::LT => 13,
             Opcode::GT => 14,
             Opcode::JEQ => 15,
+            Opcode::NOP => 16,
             Opcode::IGL => 100,
         }
     }
@@ -63,6 +65,7 @@ impl From<u8> for Opcode {
             13 => Opcode::LT,
             14 => Opcode::GT,
             15 => Opcode::JEQ,
+            16 => Opcode::NOP,
             _ => Opcode::IGL,
         }
     }
@@ -87,6 +90,7 @@ impl<'a> From<CompleteStr<'a>> for Opcode {
             CompleteStr("lt") => Opcode::LT,
             CompleteStr("gt") => Opcode::GT,
             CompleteStr("jeq") => Opcode::JEQ,
+            CompleteStr("nop") => Opcode::NOP,
             _ => Opcode::IGL,
         }
     }
@@ -118,5 +122,14 @@ mod test {
     fn test_create_instuction() {
         let instrcution = Instruction::new(Opcode::HLT);
         assert_eq!(instrcution.opcode, Opcode::HLT);
+    }
+
+    #[test]
+    fn test_str_to_opcode() {
+        let opcode = Opcode::from(CompleteStr("load"));
+        assert_eq!(opcode, Opcode::LOAD);
+
+        let opcode = Opcode::from(CompleteStr("igl"));
+        assert_eq!(opcode, Opcode::IGL);
     }
 }
