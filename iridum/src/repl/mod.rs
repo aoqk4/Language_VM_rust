@@ -1,5 +1,3 @@
-use nom::types::CompleteStr;
-
 use crate::assembler::program_parser::program;
 use crate::vm::VM;
 use std;
@@ -14,6 +12,12 @@ pub struct REPL {
     vm: VM,
 }
 
+impl Default for REPL {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl REPL {
     pub fn new() -> Self {
         Self {
@@ -23,13 +27,14 @@ impl REPL {
     }
 
     // "0x ~~" 를 받지 않고 16진수 받아서 vec of u8로 리턴
+    #[allow(dead_code)]
     fn parse_hex(&mut self, i: &str) -> Result<Vec<u8>, ParseIntError> {
         let split = i.split(' ').collect::<Vec<&str>>();
 
         let mut results: Vec<u8> = vec![];
 
         for hex_string in split {
-            let byte = u8::from_str_radix(&hex_string, 16);
+            let byte = u8::from_str_radix(hex_string, 16);
             match byte {
                 Ok(res) => {
                     results.push(res);
@@ -86,24 +91,15 @@ impl REPL {
                     println!("End of Register Listing");
                 }
                 _ => {
-                    let parsed_program = program(CompleteStr(buffer));
+                    let program = match program(buffer.into()) {
+                        Ok((_, program)) => program,
+                        Err(_) => {
+                            println!("Unable to parse input");
+                            continue;
+                        }
+                    };
 
-                    if parsed_program.is_err() {
-                        println!("Unable to parse input");
-                        continue;
-                    }
-
-                    let (_, result) = parsed_program.unwrap();
-
-                    let bytecode = result.to_bytes();
-
-                    // TODO: Make a function to let us add bytes to the VM
-
-                    for byte in bytecode {
-                        self.vm.add_byte(byte);
-                    }
-
-                    self.vm.run_once();
+                    self.vm.program.append(&mut program.to_bytes());
                 }
             }
         }
