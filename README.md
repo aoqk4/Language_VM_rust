@@ -71,3 +71,7 @@ TODO. Case-sensitive assembler fix...
 2. add nop in Opcode & impl and use from(CompleteStr) for Opcode.
 
 3. add instruction_parser form. (for LOAD, ADD, HLT)
+
+## Day 11. Alloc memory
+
+1. Allocate memory VM.

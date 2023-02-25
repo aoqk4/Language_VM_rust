@@ -20,6 +20,7 @@ pub enum Opcode {
     LTQ,
     JEQ,
     NOP,
+    ALOC,
 }
 impl From<Opcode> for u8 {
     fn from(op: Opcode) -> Self {
@@ -41,6 +42,7 @@ impl From<Opcode> for u8 {
             Opcode::GT => 14,
             Opcode::JEQ => 15,
             Opcode::NOP => 16,
+            Opcode::ALOC => 17,
             Opcode::IGL => 100,
         }
     }
@@ -66,6 +68,7 @@ impl From<u8> for Opcode {
             14 => Opcode::GT,
             15 => Opcode::JEQ,
             16 => Opcode::NOP,
+            17 => Opcode::ALOC,
             _ => Opcode::IGL,
         }
     }
@@ -91,6 +94,7 @@ impl<'a> From<CompleteStr<'a>> for Opcode {
             CompleteStr("gt") => Opcode::GT,
             CompleteStr("jeq") => Opcode::JEQ,
             CompleteStr("nop") => Opcode::NOP,
+            CompleteStr("aloc") => Opcode::ALOC,
             _ => Opcode::IGL,
         }
     }

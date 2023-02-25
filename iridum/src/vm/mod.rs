@@ -3,6 +3,7 @@ pub struct VM {
     pub registers: [i32; 32],
     pc: usize,
     pub program: Vec<u8>,
+    heap: Vec<u8>,
     remainder: u32,
     equal_flag: bool,
 }
@@ -18,6 +19,7 @@ impl VM {
         VM {
             registers: [0; 32],
             program: vec![],
+            heap: vec![],
             pc: 0,
             remainder: 0,
             equal_flag: false,
@@ -193,6 +195,15 @@ impl VM {
                 self.next_8_bits();
                 self.next_8_bits();
                 self.next_8_bits();
+            }
+            Opcode::ALOC => {
+                // 레지스터에 메모리 할당
+
+                let register = self.next_8_bits() as usize;
+                let bytes = self.registers[register];
+                let new_end = self.heap.len() as i32 + bytes;
+
+                self.heap.resize(new_end as usize, 0);
             }
             Opcode::IGL => {
                 println!("Unrecognized opcode found! Terminating!");
@@ -449,5 +460,18 @@ mod tests {
         test_vm.registers[1] = 255;
         test_vm.run_once();
         assert_eq!(test_vm.equal_flag, false);
+    }
+
+    #[test]
+    fn test_aloc_opcode() {
+        let mut test_vm = VM::new();
+
+        test_vm.registers[0] = 512;
+
+        test_vm.program = vec![17, 0, 0, 0];
+
+        test_vm.run_once();
+
+        assert_eq!(test_vm.heap.len(), 512);
     }
 }
