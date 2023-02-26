@@ -75,3 +75,7 @@ TODO. Case-sensitive assembler fix...
 ## Day 11. Alloc memory
 
 1. Allocate memory VM.
+
+## Day 12. Small fix
+
+1. small bug fix..

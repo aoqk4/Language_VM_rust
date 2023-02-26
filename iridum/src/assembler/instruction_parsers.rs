@@ -32,6 +32,9 @@ impl AssemblerInstruction {
                 AssemblerInstruction::extract_operand(token, &mut results)
             }
         }
+        while results.len() < 4 {
+            results.push(0);
+        }
 
         results
     }

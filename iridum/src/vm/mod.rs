@@ -61,7 +61,7 @@ impl VM {
     }
     fn excute_instruction(&mut self) -> bool {
         if self.pc >= self.program.len() {
-            return false;
+            return true;
         }
         match self.decode_opcode() {
             Opcode::LOAD => {
@@ -207,13 +207,14 @@ impl VM {
             }
             Opcode::IGL => {
                 println!("Unrecognized opcode found! Terminating!");
+                return true;
             }
             Opcode::HLT => {
                 println!("HLT encountered");
-                // false;
+                return true;
             }
         }
-        true
+        false
     }
 
     fn next_8_bits(&mut self) -> u8 {
