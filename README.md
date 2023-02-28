@@ -79,3 +79,9 @@ TODO. Case-sensitive assembler fix...
 ## Day 12. Small fix
 
 1. small bug fix..
+
+## Day 13. Add Assembler Label(+ Usage) & fix REPL
+
+1. Add Label (for reference) and Usage tag
+
+2. Fix Command load_file and clear_program

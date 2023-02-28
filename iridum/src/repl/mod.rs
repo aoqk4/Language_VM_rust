@@ -120,6 +120,9 @@ impl REPL {
                     };
                     self.vm.program.append(&mut program.to_bytes());
                 }
+                ".clear_program" => {
+                    self.vm.program.clear();
+                }
                 _ => {
                     let program = match program(buffer.into()) {
                         Ok((_, program)) => program,
