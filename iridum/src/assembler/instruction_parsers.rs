@@ -1,18 +1,44 @@
 use nom::multispace;
 use nom::types::CompleteStr;
 
+use super::directive_parsers::directive;
+use super::label_parsers::*;
 use super::opcode_parsers::*;
 use super::operand_parsers::integer_operand;
+use super::operand_parsers::operand;
 use super::register_parsers::register;
 use super::Token;
 
 #[derive(Debug, PartialEq)]
 pub struct AssemblerInstruction {
-    opcode: Token,
-    operand1: Option<Token>,
-    operand2: Option<Token>,
-    operand3: Option<Token>,
+    pub opcode: Option<Token>,
+    pub label: Option<Token>,
+    pub directive: Option<Token>,
+    pub operand1: Option<Token>,
+    pub operand2: Option<Token>,
+    pub operand3: Option<Token>,
 }
+
+named!(instruction_combined<CompleteStr, AssemblerInstruction>,
+do_parse!(
+    l: opt!(label_declaration) >>
+    o: opcode >>
+    o1: opt!(operand) >>
+    o2: opt!(operand) >>
+    o3: opt!(operand) >>
+    (
+        AssemblerInstruction {
+            opcode: Some(o),
+            label: 1,
+            directive: None,
+            operand1: o1,
+            operand2: o2,
+            operand3: o3,
+
+        }
+    )
+));
+
 impl AssemblerInstruction {
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut results = vec![];
@@ -57,62 +83,61 @@ impl AssemblerInstruction {
     }
 }
 
-named!(pub instruction_one<CompleteStr, AssemblerInstruction>,
-    do_parse!(
-        o: opcode >>
-        r: register >>
-        i: integer_operand >>
-        (
-            AssemblerInstruction{
-                opcode: o,
-                operand1: Some(r),
-                operand2: Some(i),
-                operand3: None
-            }
+// named!(pub instruction_one<CompleteStr, AssemblerInstruction>,
+//     do_parse!(
+//         o: opcode >>
+//         r: register >>
+//         i: integer_operand >>
+//         (
+//             AssemblerInstruction{
+//                 opcode: o,
+//                 operand1: Some(r),
+//                 operand2: Some(i),
+//                 operand3: None
+//             }
 
-        )
-    )
-);
+//         )
+//     )
+// );
 
-named!(pub instruction_two<CompleteStr, AssemblerInstruction>,
-    do_parse!(
-        o: opcode >>
-        opt!(multispace) >>
-        (
-            AssemblerInstruction {
-                opcode: o,
-                operand1 : None,
-                operand2 : None,
-                operand3 : None,
-            }
-        )
+// named!(pub instruction_two<CompleteStr, AssemblerInstruction>,
+//     do_parse!(
+//         o: opcode >>
+//         opt!(multispace) >>
+//         (
+//             AssemblerInstruction {
+//                 opcode: o,
+//                 operand1 : None,
+//                 operand2 : None,
+//                 operand3 : None,
+//             }
+//         )
 
-    )
-);
+//     )
+// );
 
-named!(pub instruction_thr<CompleteStr, AssemblerInstruction>,
-    do_parse!(
-        o: opcode >>
-        r1: register >>
-        r2: register >>
-        r3: register >>
-        (
-            AssemblerInstruction{
-                opcode: o,
-                operand1: Some(r1),
-                operand2: Some(r2),
-                operand3: Some(r3),
-            }
-        )
-    )
-);
+// named!(pub instruction_thr<CompleteStr, AssemblerInstruction>,
+//     do_parse!(
+//         o: opcode >>
+//         r1: register >>
+//         r2: register >>
+//         r3: register >>
+//         (
+//             AssemblerInstruction{
+//                 opcode: o,
+//                 operand1: Some(r1),
+//                 operand2: Some(r2),
+//                 operand3: Some(r3),
+//             }
+//         )
+//     )
+// );
 
 named!(pub instruction<CompleteStr, AssemblerInstruction>,
     do_parse!(
         ins: alt!(
-            instruction_thr |
-            instruction_one |
-            instruction_two
+            instruction |
+            directive
         ) >>
         (
             ins
