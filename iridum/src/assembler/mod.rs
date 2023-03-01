@@ -28,6 +28,12 @@ pub struct Assembler {
     pub symbols: SymbolTable,
 }
 
+impl Default for Assembler {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Assembler {
     pub fn new() -> Self {
         Self {
@@ -35,6 +41,7 @@ impl Assembler {
             symbols: SymbolTable::new(),
         }
     }
+
     pub fn assemble(&mut self, raw: &str) -> Option<Vec<u8>> {
         match program(CompleteStr(raw)) {
             Ok((_remainder, program)) => {
@@ -82,6 +89,7 @@ impl Assembler {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct Symbol {
     name: String,

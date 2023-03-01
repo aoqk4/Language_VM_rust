@@ -112,7 +112,7 @@ impl REPL {
                         .expect("There was an error reading from the file");
 
                     let program = match program(CompleteStr(&contents)) {
-                        Ok((remainder, program)) => program,
+                        Ok((_remainder, program)) => program,
                         Err(e) => {
                             println!("Unable to parse input: {:?}", e);
                             continue;

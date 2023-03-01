@@ -1,12 +1,12 @@
-use nom::multispace;
+// use nom::multispace;
 use nom::types::CompleteStr;
 
 use super::directive_parsers::directive;
 use super::label_parsers::*;
 use super::opcode_parsers::*;
-use super::operand_parsers::integer_operand;
+// use super::operand_parsers::integer_operand;
 use super::operand_parsers::operand;
-use super::register_parsers::register;
+// use super::register_parsers::register;
 use super::Token;
 
 #[derive(Debug, PartialEq)]
@@ -85,6 +85,7 @@ impl AssemblerInstruction {
         self.label.is_some()
     }
 
+    #[allow(clippy::collapsible_match)]
     pub fn label_name(&self) -> Option<String> {
         match &self.label {
             Some(l) => match l {
