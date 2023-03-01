@@ -96,7 +96,6 @@ pub struct Symbol {
     offset: u32,
     symbol_type: SymbolType,
 }
-
 impl Symbol {
     pub fn new(name: String, symbol_type: SymbolType, offset: u32) -> Self {
         Self {
