@@ -11,18 +11,18 @@ pub enum Opcode {
     JMP,
     JMPF,
     JMPB,
-    IGL,
     EQ,
     NEQ,
-    GT,
-    LT,
     GTQ,
     LTQ,
+    LT,
+    GT,
     JEQ,
     NOP,
+    ALOC,
     INC,
     DEC,
-    ALOC,
+    IGL,
 }
 impl From<Opcode> for u8 {
     fn from(op: Opcode) -> Self {

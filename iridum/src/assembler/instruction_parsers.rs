@@ -1,12 +1,12 @@
-// use nom::multispace;
+use nom::multispace;
 use nom::types::CompleteStr;
 
 use super::directive_parsers::directive;
 use super::label_parsers::*;
 use super::opcode_parsers::*;
-// use super::operand_parsers::integer_operand;
+use super::operand_parsers::integer_operand;
 use super::operand_parsers::operand;
-// use super::register_parsers::register;
+use super::register_parsers::register;
 use super::Token;
 
 #[derive(Debug, PartialEq)]
@@ -97,60 +97,66 @@ impl AssemblerInstruction {
     }
 }
 
-// named!(pub instruction_one<CompleteStr, AssemblerInstruction>,
-//     do_parse!(
-//         o: opcode >>
-//         r: register >>
-//         i: integer_operand >>
-//         (
-//             AssemblerInstruction{
-//                 opcode: o,
-//                 operand1: Some(r),
-//                 operand2: Some(i),
-//                 operand3: None
-//             }
+named!(pub instruction_one<CompleteStr, AssemblerInstruction>,
+    do_parse!(
+        o: opcode >>
+        r: register >>
+        i: integer_operand >>
+        (
+            AssemblerInstruction{
+                label:None,
+                directive:None,
+                opcode: Some(o),
+                operand1: Some(r),
+                operand2: Some(i),
+                operand3: None
+            }
 
-//         )
-//     )
-// );
+        )
+    )
+);
 
-// named!(pub instruction_two<CompleteStr, AssemblerInstruction>,
-//     do_parse!(
-//         o: opcode >>
-//         opt!(multispace) >>
-//         (
-//             AssemblerInstruction {
-//                 opcode: o,
-//                 operand1 : None,
-//                 operand2 : None,
-//                 operand3 : None,
-//             }
-//         )
+named!(pub instruction_two<CompleteStr, AssemblerInstruction>,
+    do_parse!(
+        o: opcode >>
+        opt!(multispace) >>
+        (
+            AssemblerInstruction {
+                label: None,
+                directive:None,
+                opcode: Some(o),
+                operand1 : None,
+                operand2 : None,
+                operand3 : None,
+            }
+        )
 
-//     )
-// );
+    )
+);
 
-// named!(pub instruction_thr<CompleteStr, AssemblerInstruction>,
-//     do_parse!(
-//         o: opcode >>
-//         r1: register >>
-//         r2: register >>
-//         r3: register >>
-//         (
-//             AssemblerInstruction{
-//                 opcode: o,
-//                 operand1: Some(r1),
-//                 operand2: Some(r2),
-//                 operand3: Some(r3),
-//             }
-//         )
-//     )
-// );
+named!(pub instruction_thr<CompleteStr, AssemblerInstruction>,
+    do_parse!(
+        o: opcode >>
+        r1: register >>
+        r2: register >>
+        r3: register >>
+        (
+            AssemblerInstruction{
+                label: None,
+                directive:None,
+                opcode: Some(o),
+                operand1: Some(r1),
+                operand2: Some(r2),
+                operand3: Some(r3),
+            }
+        )
+    )
+);
 
 named!(pub instruction<CompleteStr, AssemblerInstruction>,
     do_parse!(
         ins: alt!(
-            instruction |
+            instruction_combined |
             directive
         ) >>
         (
@@ -164,60 +170,60 @@ mod tests {
     use super::*;
     use crate::assembler::Opcode;
 
-    // #[test]
-    // fn test_parse_instruction_form_one() {
-    //     let result = instruction(CompleteStr("load $0 #100\n"));
-    //     assert_eq!(
-    //         result,
-    //         Ok((
-    //             CompleteStr(""),
-    //             AssemblerInstruction {
-    //                 label: None,
-    //                 opcode: Some(Token::Op { code: Opcode::LOAD }),
-    //                 operand1: Some(Token::Register { reg_num: 0 }),
-    //                 operand2: Some(Token::IntegerOperand { value: 100 }),
-    //                 operand3: None,
-    //                 directive: None,
-    //             }
-    //         ))
-    //     );
-    // }
+    #[test]
+    fn test_parse_instruction_form_one() {
+        let result = instruction(CompleteStr("load $0 #100\n"));
+        assert_eq!(
+            result,
+            Ok((
+                CompleteStr(""),
+                AssemblerInstruction {
+                    label: None,
+                    opcode: Some(Token::Op { code: Opcode::LOAD }),
+                    operand1: Some(Token::Register { reg_num: 0 }),
+                    operand2: Some(Token::IntegerOperand { value: 100 }),
+                    operand3: None,
+                    directive: None,
+                }
+            ))
+        );
+    }
 
-    // #[test]
-    // fn test_parse_instruction_form_two() {
-    //     let result = instruction(CompleteStr("hlt\n"));
-    //     assert_eq!(
-    //         result,
-    //         Ok((
-    //             CompleteStr(""),
-    //             AssemblerInstruction {
-    //                 label: None,
-    //                 opcode: Some(Token::Op { code: Opcode::HLT }),
-    //                 operand1: None,
-    //                 operand2: None,
-    //                 operand3: None,
-    //                 directive: None,
-    //             }
-    //         ))
-    //     );
-    // }
+    #[test]
+    fn test_parse_instruction_form_two() {
+        let result = instruction(CompleteStr("hlt"));
+        assert_eq!(
+            result,
+            Ok((
+                CompleteStr(""),
+                AssemblerInstruction {
+                    label: None,
+                    opcode: Some(Token::Op { code: Opcode::HLT }),
+                    operand1: None,
+                    operand2: None,
+                    operand3: None,
+                    directive: None,
+                }
+            ))
+        );
+    }
 
-    // #[test]
-    // fn test_parse_instruction_form_thr() {
-    //     let result = instruction(CompleteStr("add $0 $1 $2\n"));
-    //     assert_eq!(
-    //         result,
-    //         Ok((
-    //             CompleteStr(""),
-    //             AssemblerInstruction {
-    //                 label: None,
-    //                 opcode: Some(Token::Op { code: Opcode::ADD }),
-    //                 operand1: Some(Token::Register { reg_num: 0 }),
-    //                 operand2: Some(Token::Register { reg_num: 1 }),
-    //                 operand3: Some(Token::Register { reg_num: 2 }),
-    //                 directive: None,
-    //             }
-    //         ))
-    //     );
-    // }
+    #[test]
+    fn test_parse_instruction_form_thr() {
+        let result = instruction(CompleteStr("add $0 $1 $2\n"));
+        assert_eq!(
+            result,
+            Ok((
+                CompleteStr(""),
+                AssemblerInstruction {
+                    label: None,
+                    opcode: Some(Token::Op { code: Opcode::ADD }),
+                    operand1: Some(Token::Register { reg_num: 0 }),
+                    operand2: Some(Token::Register { reg_num: 1 }),
+                    operand3: Some(Token::Register { reg_num: 2 }),
+                    directive: None,
+                }
+            ))
+        );
+    }
 }

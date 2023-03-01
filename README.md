@@ -85,3 +85,9 @@ TODO. Case-sensitive assembler fix...
 1. Add Label (for reference) and Usage tag
 
 2. Fix Command load_file and clear_program
+
+## Day 14. Symbol Tables
+
+1. add Symbol struct in assembler & test
+
+2. fix stack overflow
