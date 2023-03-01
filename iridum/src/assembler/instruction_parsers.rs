@@ -80,6 +80,20 @@ impl AssemblerInstruction {
             }
         }
     }
+
+    pub fn is_label(&self) -> bool {
+        self.label.is_some()
+    }
+
+    pub fn label_name(&self) -> Option<String> {
+        match &self.label {
+            Some(l) => match l {
+                Token::LabelDeclaration { name } => Some(name.clone()),
+                _ => None,
+            },
+            None => None,
+        }
+    }
 }
 
 // named!(pub instruction_one<CompleteStr, AssemblerInstruction>,

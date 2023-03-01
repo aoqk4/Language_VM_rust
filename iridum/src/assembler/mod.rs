@@ -50,7 +50,7 @@ impl Assembler {
     }
 
     fn process_first_parse(&mut self, p: &Program) {
-        self.extract_labels(*p);
+        self.extract_labels(p);
         self.phase = AssemblerPhase::Second;
     }
 
@@ -65,7 +65,7 @@ impl Assembler {
         program
     }
 
-    fn extract_labels(&mut self, p: Program) {
+    fn extract_labels(&mut self, p: &Program) {
         let mut c = 0;
 
         for i in &p.instructions {
@@ -85,7 +85,7 @@ impl Assembler {
 }
 
 #[derive(Debug)]
-struct Symbol {
+pub struct Symbol {
     name: String,
     offset: u32,
     symbol_type: SymbolType,
