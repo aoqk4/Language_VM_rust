@@ -20,31 +20,30 @@ pub struct AssemblerInstruction {
 }
 
 named!(instruction_combined<CompleteStr, AssemblerInstruction>,
-do_parse!(
-    l: opt!(label_declaration) >>
-    o: opcode >>
-    o1: opt!(operand) >>
-    o2: opt!(operand) >>
-    o3: opt!(operand) >>
-    (
-        AssemblerInstruction {
-            opcode: Some(o),
-            label: 1,
-            directive: None,
-            operand1: o1,
-            operand2: o2,
-            operand3: o3,
-
-        }
+    do_parse!(
+        l: opt!(label_declaration) >>
+        o: opcode >>
+        o1: opt!(operand) >>
+        o2: opt!(operand) >>
+        o3: opt!(operand) >>
+        (
+            AssemblerInstruction{
+                opcode: Some(o),
+                label: l,
+                directive: None,
+                operand1: o1,
+                operand2: o2,
+                operand3: o3,
+            }
+        )
     )
-));
-
+);
 impl AssemblerInstruction {
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut results = vec![];
 
         match self.opcode {
-            Token::Op { code } => {
+            Some(Token::Op { code }) => {
                 results.push(code as u8);
             }
             _ => {
@@ -158,11 +157,12 @@ mod tests {
             Ok((
                 CompleteStr(""),
                 AssemblerInstruction {
-                    // label: None,
-                    opcode: Token::Op { code: Opcode::LOAD },
+                    label: None,
+                    opcode: Some(Token::Op { code: Opcode::LOAD }),
                     operand1: Some(Token::Register { reg_num: 0 }),
                     operand2: Some(Token::IntegerOperand { value: 100 }),
-                    operand3: None
+                    operand3: None,
+                    directive: None,
                 }
             ))
         );
@@ -176,11 +176,12 @@ mod tests {
             Ok((
                 CompleteStr(""),
                 AssemblerInstruction {
-                    // label: None,
-                    opcode: Token::Op { code: Opcode::HLT },
+                    label: None,
+                    opcode: Some(Token::Op { code: Opcode::HLT }),
                     operand1: None,
                     operand2: None,
-                    operand3: None
+                    operand3: None,
+                    directive: None,
                 }
             ))
         );
@@ -194,11 +195,12 @@ mod tests {
             Ok((
                 CompleteStr(""),
                 AssemblerInstruction {
-                    // label: None,
-                    opcode: Token::Op { code: Opcode::ADD },
+                    label: None,
+                    opcode: Some(Token::Op { code: Opcode::ADD }),
                     operand1: Some(Token::Register { reg_num: 0 }),
                     operand2: Some(Token::Register { reg_num: 1 }),
-                    operand3: Some(Token::Register { reg_num: 2 })
+                    operand3: Some(Token::Register { reg_num: 2 }),
+                    directive: None,
                 }
             ))
         );
