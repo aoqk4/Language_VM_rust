@@ -36,17 +36,92 @@ impl Assembler {
         }
     }
 
-    pub fn assemble(&mut self, raw: &str) -> Opcode<Vec<u8>> {
+    pub fn assemble(&mut self, raw: &str) -> Option<Vec<u8>> {
         match program(CompleteStr(raw)) {
             Ok((_remainder, program)) => {
                 self.process_first_parse(&program);
+                Some(self.process_second_phase(&program))
+            }
+            Err(e) => {
+                eprintln!("There was an error assembling the code : {:?}", e);
+                None
             }
         }
     }
 
     fn process_first_parse(&mut self, p: &Program) {
-        self.extract_labels(p);
+        self.extract_labels(*p);
         self.phase = AssemblerPhase::Second;
+    }
+
+    fn process_second_phase(&mut self, p: &Program) -> Vec<u8> {
+        let mut program = vec![];
+
+        for i in &p.instructions {
+            let mut bytes = i.to_bytes();
+            program.append(&mut bytes);
+        }
+
+        program
+    }
+
+    fn extract_labels(&mut self, p: Program) {
+        let mut c = 0;
+
+        for i in &p.instructions {
+            if i.is_label() {
+                match i.label_name() {
+                    Some(name) => {
+                        let symbol = Symbol::new(name, SymbolType::Label, c);
+                        self.symbols.add_symbol(symbol);
+                    }
+                    Noee => {}
+                }
+            }
+
+            c += 4;
+        }
+    }
+}
+
+#[derive(Debug)]
+struct Symbol {
+    name: String,
+    offset: u32,
+    symbol_type: SymbolType,
+}
+
+impl Symbol {
+    pub fn new(name: String, symbol_type: SymbolType, offset: u32) -> Self {
+        Self {
+            name,
+            offset,
+            symbol_type,
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct SymbolTable {
+    symbols: Vec<Symbol>,
+}
+
+impl SymbolTable {
+    pub fn new() -> Self {
+        Self { symbols: vec![] }
+    }
+
+    pub fn add_symbol(&mut self, s: Symbol) {
+        self.symbols.push(s);
+    }
+
+    pub fn symbol_value(&mut self, s: &str) -> Option<u32> {
+        for symbol in &self.symbols {
+            if symbol.name == s {
+                return Some(symbol.offset);
+            }
+        }
+        None
     }
 }
 
@@ -54,4 +129,9 @@ impl Assembler {
 pub enum AssemblerPhase {
     First,
     Second,
+}
+
+#[derive(Debug)]
+pub enum SymbolType {
+    Label,
 }
