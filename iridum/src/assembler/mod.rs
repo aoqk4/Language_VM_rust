@@ -35,21 +35,19 @@ impl Assembler {
             symbols: SymbolTable::new(),
         }
     }
-
     pub fn assemble(&mut self, raw: &str) -> Option<Vec<u8>> {
         match program(CompleteStr(raw)) {
             Ok((_remainder, program)) => {
-                self.process_first_parse(&program);
+                self.process_first_phase(&program);
                 Some(self.process_second_phase(&program))
             }
             Err(e) => {
-                eprintln!("There was an error assembling the code : {:?}", e);
+                println!("There was an error assembling the code: {:?}", e);
                 None
             }
         }
     }
-
-    fn process_first_parse(&mut self, p: &Program) {
+    fn process_first_phase(&mut self, p: &Program) {
         self.extract_labels(p);
         self.phase = AssemblerPhase::Second;
     }
@@ -75,7 +73,7 @@ impl Assembler {
                         let symbol = Symbol::new(name, SymbolType::Label, c);
                         self.symbols.add_symbol(symbol);
                     }
-                    Noee => {}
+                    None => {}
                 }
             }
 
@@ -134,4 +132,43 @@ pub enum AssemblerPhase {
 #[derive(Debug)]
 pub enum SymbolType {
     Label,
+}
+
+#[cfg(test)]
+mod tests {
+
+    use crate::vm::VM;
+
+    use super::*;
+
+    // 기호 관련 테스트
+    #[test]
+    fn test_symbol_table() {
+        let mut sym = SymbolTable::new();
+        let new_symbol = Symbol::new("test".to_string(), SymbolType::Label, 12);
+        sym.add_symbol(new_symbol);
+        assert_eq!(sym.symbols.len(), 1);
+
+        let v = sym.symbol_value("test");
+        assert_eq!(v.is_some(), true);
+
+        let v = v.unwrap();
+        assert_eq!(v, 12);
+
+        let v = sym.symbol_value("does_not_exist");
+        assert_eq!(v.is_some(), false);
+    }
+
+    // 어셈블러 테스트
+    #[test]
+    fn test_assemble_program() {
+        let mut asm = Assembler::new();
+        let test_string =
+            "load $0 #100\nload $1 #1\nload $2 #0\ntest: inc $0\nneq $0 $2\njmpe @test\nhlt";
+        let program = asm.assemble(test_string).unwrap();
+        let mut vm = VM::new();
+        assert_eq!(program.len(), 21);
+        vm.add_bytes(program);
+        assert_eq!(vm.program.len(), 21);
+    }
 }

@@ -20,6 +20,8 @@ pub enum Opcode {
     LTQ,
     JEQ,
     NOP,
+    INC,
+    DEC,
     ALOC,
 }
 impl From<Opcode> for u8 {
@@ -43,6 +45,8 @@ impl From<Opcode> for u8 {
             Opcode::JEQ => 15,
             Opcode::NOP => 16,
             Opcode::ALOC => 17,
+            Opcode::INC => 18,
+            Opcode::DEC => 19,
             Opcode::IGL => 100,
         }
     }
@@ -69,6 +73,8 @@ impl From<u8> for Opcode {
             15 => Opcode::JEQ,
             16 => Opcode::NOP,
             17 => Opcode::ALOC,
+            18 => Opcode::INC,
+            19 => Opcode::DEC,
             _ => Opcode::IGL,
         }
     }
@@ -95,6 +101,8 @@ impl<'a> From<CompleteStr<'a>> for Opcode {
             CompleteStr("jeq") => Opcode::JEQ,
             CompleteStr("nop") => Opcode::NOP,
             CompleteStr("aloc") => Opcode::ALOC,
+            CompleteStr("inc") => Opcode::INC,
+            CompleteStr("dec") => Opcode::DEC,
             _ => Opcode::IGL,
         }
     }

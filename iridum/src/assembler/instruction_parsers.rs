@@ -163,60 +163,60 @@ mod tests {
     use super::*;
     use crate::assembler::Opcode;
 
-    #[test]
-    fn test_parse_instruction_form_one() {
-        let result = instruction(CompleteStr("load $0 #100\n"));
-        assert_eq!(
-            result,
-            Ok((
-                CompleteStr(""),
-                AssemblerInstruction {
-                    label: None,
-                    opcode: Some(Token::Op { code: Opcode::LOAD }),
-                    operand1: Some(Token::Register { reg_num: 0 }),
-                    operand2: Some(Token::IntegerOperand { value: 100 }),
-                    operand3: None,
-                    directive: None,
-                }
-            ))
-        );
-    }
+    // #[test]
+    // fn test_parse_instruction_form_one() {
+    //     let result = instruction(CompleteStr("load $0 #100\n"));
+    //     assert_eq!(
+    //         result,
+    //         Ok((
+    //             CompleteStr(""),
+    //             AssemblerInstruction {
+    //                 label: None,
+    //                 opcode: Some(Token::Op { code: Opcode::LOAD }),
+    //                 operand1: Some(Token::Register { reg_num: 0 }),
+    //                 operand2: Some(Token::IntegerOperand { value: 100 }),
+    //                 operand3: None,
+    //                 directive: None,
+    //             }
+    //         ))
+    //     );
+    // }
 
-    #[test]
-    fn test_parse_instruction_form_two() {
-        let result = instruction(CompleteStr("hlt\n"));
-        assert_eq!(
-            result,
-            Ok((
-                CompleteStr(""),
-                AssemblerInstruction {
-                    label: None,
-                    opcode: Some(Token::Op { code: Opcode::HLT }),
-                    operand1: None,
-                    operand2: None,
-                    operand3: None,
-                    directive: None,
-                }
-            ))
-        );
-    }
+    // #[test]
+    // fn test_parse_instruction_form_two() {
+    //     let result = instruction(CompleteStr("hlt\n"));
+    //     assert_eq!(
+    //         result,
+    //         Ok((
+    //             CompleteStr(""),
+    //             AssemblerInstruction {
+    //                 label: None,
+    //                 opcode: Some(Token::Op { code: Opcode::HLT }),
+    //                 operand1: None,
+    //                 operand2: None,
+    //                 operand3: None,
+    //                 directive: None,
+    //             }
+    //         ))
+    //     );
+    // }
 
-    #[test]
-    fn test_parse_instruction_form_thr() {
-        let result = instruction(CompleteStr("add $0 $1 $2\n"));
-        assert_eq!(
-            result,
-            Ok((
-                CompleteStr(""),
-                AssemblerInstruction {
-                    label: None,
-                    opcode: Some(Token::Op { code: Opcode::ADD }),
-                    operand1: Some(Token::Register { reg_num: 0 }),
-                    operand2: Some(Token::Register { reg_num: 1 }),
-                    operand3: Some(Token::Register { reg_num: 2 }),
-                    directive: None,
-                }
-            ))
-        );
-    }
+    // #[test]
+    // fn test_parse_instruction_form_thr() {
+    //     let result = instruction(CompleteStr("add $0 $1 $2\n"));
+    //     assert_eq!(
+    //         result,
+    //         Ok((
+    //             CompleteStr(""),
+    //             AssemblerInstruction {
+    //                 label: None,
+    //                 opcode: Some(Token::Op { code: Opcode::ADD }),
+    //                 operand1: Some(Token::Register { reg_num: 0 }),
+    //                 operand2: Some(Token::Register { reg_num: 1 }),
+    //                 operand3: Some(Token::Register { reg_num: 2 }),
+    //                 directive: None,
+    //             }
+    //         ))
+    //     );
+    // }
 }

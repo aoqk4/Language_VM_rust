@@ -48,8 +48,10 @@ impl VM {
 
     pub fn add_byte(&mut self, b: u8) {
         self.program.push(b);
+    }
 
-        println!("{}", b);
+    pub fn add_bytes(&mut self, mut b: Vec<u8>) {
+        self.program.append(&mut b);
     }
 
     pub fn decode_opcode(&mut self) -> Opcode {
@@ -204,6 +206,18 @@ impl VM {
                 let new_end = self.heap.len() as i32 + bytes;
 
                 self.heap.resize(new_end as usize, 0);
+            }
+            Opcode::INC => {
+                let register_number = self.next_8_bits() as usize;
+                self.registers[register_number] += 1;
+                self.next_8_bits();
+                self.next_8_bits();
+            }
+            Opcode::DEC => {
+                let register_number = self.next_8_bits() as usize;
+                self.registers[register_number] -= 1;
+                self.next_8_bits();
+                self.next_8_bits();
             }
             Opcode::IGL => {
                 println!("Unrecognized opcode found! Terminating!");
