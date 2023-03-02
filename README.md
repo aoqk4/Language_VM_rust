@@ -91,3 +91,7 @@ TODO. Case-sensitive assembler fix...
 1. add Symbol struct in assembler & test
 
 2. fix stack overflow
+
+## Day 15. yml and cargo add clap
+
+1. add read_yml and cargo clap
