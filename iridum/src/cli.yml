@@ -1,0 +1,9 @@
+name: iridum
+version: "0.0.1"
+author: authththth
+about: Interpreter for the lang
+args:
+  - INPUT_FILE:
+      help: Path to the .isam or .ir file to run
+      required: false
+      index: 1
