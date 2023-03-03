@@ -12,6 +12,9 @@ pub mod operand_parsers;
 pub mod program_parser;
 pub mod register_parsers;
 
+const PIE_HEADER_PREFIX: [u8; 4] = [45, 50, 49, 45];
+const PIE_HEADER_LENGTH: usize = 64;
+
 #[derive(Debug, PartialEq, Clone)]
 pub enum Token {
     Op { code: Opcode },
@@ -45,11 +48,15 @@ impl Assembler {
     pub fn assemble(&mut self, raw: &str) -> Option<Vec<u8>> {
         match program(CompleteStr(raw)) {
             Ok((_remainder, program)) => {
+                let mut assembled_program = self.write_pie_header();
                 self.process_first_phase(&program);
-                Some(self.process_second_phase(&program))
+                let mut body = self.process_second_phase(&program);
+
+                assembled_program.append(&mut body);
+                Some(assembled_program)
             }
             Err(e) => {
-                println!("There was an error assembling the code: {:?}", e);
+                eprintln!("There was an error assembling the code: {:?}", e);
                 None
             }
         }
@@ -86,6 +93,18 @@ impl Assembler {
 
             c += 4;
         }
+    }
+
+    fn write_pie_header(&self) -> Vec<u8> {
+        let mut header = vec![];
+        for byte in PIE_HEADER_PREFIX.into_iter() {
+            header.push(byte.clone());
+        }
+        while header.len() <= PIE_HEADER_LENGTH {
+            header.push(0 as u8);
+        }
+
+        header
     }
 }
 
