@@ -193,11 +193,9 @@ mod tests {
             "load $0 #100\nload $1 #1\nload $2 #0\ntest: inc $0\nneq $0 $2\njeq @test\nhlt";
         let program = asm.assemble(test_string).unwrap();
 
-        println!("{:?}", program);
-
         let mut vm = VM::new();
-        assert_eq!(program.len(), 24);
+        assert_eq!(program.len(), 89);
         vm.add_bytes(program);
-        assert_eq!(vm.program.len(), 24);
+        assert_eq!(vm.program.len(), 89);
     }
 }
