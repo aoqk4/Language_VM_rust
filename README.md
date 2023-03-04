@@ -99,3 +99,9 @@ TODO. Case-sensitive assembler fix...
 ## Day 16. rename file & add header
 
 1. add EPIE header in assembler
+
+## Day 17. add fn for String.
+
+1. add fn for String
+
+2. add branch for update lib & new chapter
