@@ -1,3 +1,4 @@
+use crate::assembler::{PIE_HEADER_LENGTH, PIE_HEADER_PREFIX};
 use crate::instruction::Opcode;
 pub struct VM {
     pub registers: [i32; 32],
@@ -61,6 +62,29 @@ impl VM {
 
         opcode
     }
+
+    fn verify_header(&self) -> bool {
+        if self.program[0..4] != PIE_HEADER_PREFIX {
+            return false;
+        }
+
+        true
+    }
+
+    fn prepend_header(mut b: Vec<u8>) -> Vec<u8> {
+        let mut prepension = vec![];
+
+        for byte in PIE_HEADER_PREFIX.into_iter() {
+            prepension.push(byte.clone());
+        }
+        while prepension.len() <= PIE_HEADER_LENGTH {
+            prepension.push(0);
+        }
+
+        prepension.append(&mut b);
+        prepension
+    }
+
     fn excute_instruction(&mut self) -> bool {
         if self.pc >= self.program.len() {
             return true;
