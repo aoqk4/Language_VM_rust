@@ -143,5 +143,7 @@ mod test {
 
         let opcode = Opcode::from(CompleteStr("igl"));
         assert_eq!(opcode, Opcode::IGL);
+
+        println!("Hello World!");
     }
 }
